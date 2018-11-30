@@ -1,1 +1,1 @@
-[![Build Status](https://travis-ci.org/darryldecode/laravel-starter-kit.svg?branch=master)](https://travis-ci.org/darryldecode/laravel-starter-kit) 프로젝트의 
+[![Build Status](https://travis-ci.org/darryldecode/laravel-starter-kit.svg?branch=master)](https://travis-ci.org/darryldecode/laravel-starter-kit) https://travis-ci.org/darryldecode/laravel-starter-kit 프로젝트를 기반으로 제작중인 싱글페이지 웹앱
