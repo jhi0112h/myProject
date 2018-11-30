@@ -6,9 +6,6 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
 
-        // breadcrumbs
-        breadcrumbs: [],
-
         // loader
         showLoader: false,
 
@@ -26,14 +23,15 @@ export default new Vuex.Store({
         dialogIcon: null,
         dialogOkCb: ()=>{},
         dialogCancelCb: ()=>{},
+
+        //pagination
+        pagination: {
+            page:1,
+            rowsPerPage: 20,
+            totalItems: ''
+        }
     },
     mutations: {
-
-        // breadcrumbs
-        setBreadcrumbs(state, items) {
-            items.unshift({label:'Home',name:'dashboard'});
-            state.breadcrumbs = items;
-        },
 
         // loader
         showLoader(state) {
@@ -74,15 +72,14 @@ export default new Vuex.Store({
         dialogCancel(state) {
             state.dialogCancelCb();
             state.dialogShow = false;
-        }
-    },
-    getters: {
-
-        // get breadcrumbs
-        getBreadcrumbs: state => {
-            return state.breadcrumbs
         },
 
+        // pagination
+        setPagination(state, page) {
+            state.pagination = page;
+        },
+    },
+    getters: {
         // loader
         showLoader: state => {
             return state.showLoader
@@ -117,6 +114,11 @@ export default new Vuex.Store({
         },
         dialogIcon: state => {
             return state.dialogIcon
+        },
+
+        // get pagination
+        getPagination: state => {
+            return state.pagination
         },
     }
 });

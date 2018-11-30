@@ -105,7 +105,11 @@ class FileGroupController extends AdminController
      */
     public function destroy($id)
     {
-        $this->fileGroupRepository->delete($id);
+        try {
+            $this->fileGroupRepository->deleteRecordAndFile($id);
+        } catch (\Exception $e) {
+            return $this->sendResponseBadRequest("Failed to delete file Group.");
+        }
 
         return $this->sendResponseOk([],"Deleted.");
     }

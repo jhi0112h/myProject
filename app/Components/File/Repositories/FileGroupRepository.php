@@ -20,6 +20,26 @@ class FileGroupRepository extends BaseRepository
     }
 
     /**
+     * @author darryldecode <darrylfernandez.com>
+     * @since  v1.0
+     *
+     * @param $id
+     *
+     * @return bool
+     * @throws \Exception
+     */
+    public function deleteRecordAndFile($id)
+    {
+        /** @var File $fileRecord */
+        $fileRecord = $this->model->find($id);
+
+        // delete record
+        $fileRecord->delete();
+
+        return true;
+    }
+
+    /**
      * list resource
      *
      * @param array $params

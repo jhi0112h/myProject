@@ -22,7 +22,7 @@ Auth::routes();
 // for demo purpose to prevent viewers to modify data on a live demo site
 
 // admin
-Route::prefix('admin')->namespace('Admin')->middleware(['auth','demo'])->group(function()
+Route::prefix('admin')->namespace('Admin')->middleware(['auth'])->group(function()
 {
     // single page
     Route::get('/', 'SinglePageController@displaySPA')->name('admin.spa');
@@ -33,4 +33,15 @@ Route::prefix('admin')->namespace('Admin')->middleware(['auth','demo'])->group(f
     Route::resource('permissions','PermissionController');
     Route::resource('files','FileController');
     Route::resource('file-groups','FileGroupController');
+    Route::resource('signs', 'SignsController');
+});
+
+// sign
+Route::prefix('sign')->namespace('Sign')->middleware(['auth'])->group(function()
+{
+    // single page
+    Route::get('/', 'SinglePageController@displaySPA')->name('sign.spa');
+
+    // resource routes
+    Route::resource('signs', 'SignsController');
 });

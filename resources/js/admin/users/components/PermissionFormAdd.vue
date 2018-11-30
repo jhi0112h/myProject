@@ -56,11 +56,7 @@
             }
         },
         mounted() {
-            this.$store.commit('setBreadcrumbs',[
-                {label:'Users',name:'users.list'},
-                {label:'Permissions',name:'users.permissions.list'},
-                {label:'Create',name:''},
-            ]);
+
         },
         watch: {
             permissionKey(v) {

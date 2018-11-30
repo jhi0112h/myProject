@@ -51,10 +51,6 @@
             console.log('pages.FileManager.vue');
 
             const self = this;
-
-            self.$store.commit('setBreadcrumbs',[
-                {label:'Files',name:''}
-            ]);
         },
         data() {
             return {

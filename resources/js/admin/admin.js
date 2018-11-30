@@ -15,29 +15,35 @@ import 'vuetify/dist/vuetify.min.css';
 
 Vue.use(Vuetify);
 
-Vue.component('moon-loader', require('vue-spinner/src/MoonLoader.vue'));
+// loader
+import MoonLoader from 'vue-spinner/src/MoonLoader.vue';
+
+// search
+import Search from './search/Search.vue';
 
 // app
 import router from './router';
 import store from '../common/Store';
 import eventBus from '../common/Event';
 import formatters from '../common/Formatters';
+import InstantSearch from 'vue-instantsearch';
+import anime from 'animejs';
 
 Vue.use(formatters);
 Vue.use(eventBus);
+Vue.use(InstantSearch);
 
 const admin = new Vue({
     el: '#admin',
     eventBus,
-    router,
     store,
+    router,
+    components: { MoonLoader: MoonLoader, Search: Search },
     data: () => ({
         drawer: true,
+        navigatorAnimation: {},
     }),
     computed: {
-        getBreadcrumbs() {
-            return store.getters.getBreadcrumbs
-        },
         showLoader() {
             return store.getters.showLoader;
         },
@@ -80,6 +86,7 @@ const admin = new Vue({
         dialogIcon() {
             return store.getters.dialogIcon
         },
+
     },
     methods: {
         menuClick(routeName, routeType) {
@@ -105,6 +112,18 @@ const admin = new Vue({
         },
         dialogCancel() {
             store.commit('dialogCancel');
-        }
+        },
+        ListItemMouseOver(event) {
+            anime({
+                targets: event.currentTarget.querySelector('.v-avatar'),
+                borderRadius: '15px',
+            })
+        },
+        ListItemMouseOut(event) {
+            anime({
+                targets: event.currentTarget.querySelector('.v-avatar'),
+                borderRadius: '50%',
+            })
+        },
     }
 });

@@ -125,10 +125,6 @@
         mounted() {
             const self = this;
 
-            self.$store.commit('setBreadcrumbs',[
-                {label:'Users',name:'users.list'},
-                {label:'Groups',name:''},
-            ]);
         },
         watch: {
             'pagination.page':function(){

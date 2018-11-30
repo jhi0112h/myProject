@@ -93,7 +93,7 @@
 <script>
     export default {
         props: {
-            propUserId: {
+            propSignId: {
                 required: true
             }
         },
@@ -183,7 +183,7 @@
 
                 self.$store.commit('showLoader');
 
-                axios.put('/admin/users/'+self.propUserId,payload).then(function(response) {
+                axios.put('/admin/users/'+self.propSignId,payload).then(function(response) {
 
                     self.$store.commit('showSnackbar',{
                        message: response.data.message,
@@ -242,7 +242,7 @@
                 // reset first
                 self.groups = [];
 
-                axios.get('/admin/users/' + self.propUserId).then(function(response) {
+                axios.get('/admin/users/' + self.propSignId).then(function(response) {
                     let User = response.data.data;
 
                     self.name = User.name;
@@ -254,6 +254,7 @@
                     _.each(User.groups,(g)=>{
                         self.groups[g.id] = true;
                     });
+
                     cb();
                 });
             },

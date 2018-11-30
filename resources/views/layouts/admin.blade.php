@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', '업체관리시스템') }}</title>
 
     <!-- Styles -->
     <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet">
@@ -24,74 +24,105 @@
 <div id="admin">
 
     <template>
-        <v-app id="inspire" dark>
+        <v-app id="inspire">
             <v-navigation-drawer
-                    clipped
+                    mini-variant
                     fixed
+                    dark
                     v-model="drawer"
                     app>
-                <v-list dense>
 
+                <v-list dense>
                     @foreach($nav as $n)
                         @if($n->navType==\App\Components\Core\Menu\MenuItem::$NAV_TYPE_NAV)
-                            <v-list-tile :to="{name:'{{$n->routeName}}'}" :exact="false">
-                                <v-list-tile-action>
-                                    <v-icon>{{$n->icon}}</v-icon>
-                                </v-list-tile-action>
-                                <v-list-tile-content>
-                                    <v-list-tile-title>
-                                        {{$n->label}}
-                                    </v-list-tile-title>
-                                </v-list-tile-content>
+                            <v-list-tile
+                                    :to="{name:'{{$n->routeName}}'}"
+                                    :exact="false"
+                                    avatar>
+                                <v-tooltip right>
+                                <v-list-tile-avatar
+                                        @mouseover.stop="ListItemMouseOver"
+                                        @mouseout.stop="ListItemMouseOut"
+                                        size="50"
+                                        color="#2f3136"
+                                        slot="activator">
+                                    <v-icon
+                                            size="30">
+                                        {{$n->icon}}
+                                    </v-icon>
+                                </v-list-tile-avatar>
+                                    <span>{{$n->label}}</span>
+                                </v-tooltip>
+
                             </v-list-tile>
                         @else
                             <v-divider></v-divider>
                         @endif
                     @endforeach
-
-                    <v-list-tile @click="clickLogout('{{route('logout')}}','{{url('/')}}')">
-                        <v-list-tile-action>
-                            <v-icon>directions_walk</v-icon>
-                        </v-list-tile-action>
-                        <v-list-tile-content>
-                            <v-list-tile-title>Logout</v-list-tile-title>
-                        </v-list-tile-content>
-                    </v-list-tile>
-
                 </v-list>
             </v-navigation-drawer>
-            <v-toolbar app fixed clipped-left>
+            <v-toolbar app fixed color="#fff">
                 <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-                <v-toolbar-title>{{config('app.name')}}</v-toolbar-title>
+                <v-toolbar-title>
+                    <a href="/" class="d-flex">
+                        <img height="35" src="{{url('img/logo.png')}}">
+                    </a>
+                </v-toolbar-title>
+                <v-flex xs12 sm4>
+                    <search></search>
+                </v-flex>
+
+                <v-spacer></v-spacer>
+
+                <v-menu bottom left offset-y>
+                    <v-btn
+                            slot="activator"
+                            icon
+                    >
+                        <v-badge left overlap>
+                            <span slot="badge">6</span>
+                            <v-icon>notification_important</v-icon>
+                        </v-badge>
+                    </v-btn>
+
+                    <v-list>
+                        <v-list-tile
+                                @click=""
+                        >
+                            <v-list-tile-title>테스트</v-list-tile-title>
+                        </v-list-tile>
+                    </v-list>
+                </v-menu>
+
+                <v-menu bottom left offset-y>
+                    <v-btn
+                            slot="activator"
+                            icon
+                    >
+                        <v-icon>more_vert</v-icon>
+                    </v-btn>
+
+                    <v-list>
+                        <v-list-tile
+                                @click=""
+                        >
+                            <v-list-tile-title @click="clickLogout('{{ route("logout") }}', '{{ url('/') }}')">LOGOUT</v-list-tile-title>
+                        </v-list-tile>
+                    </v-list>
+                </v-menu>
+                </v-card-title>
             </v-toolbar>
             <v-content>
-                <div>
-                    <v-breadcrumbs>
-                        <v-icon slot="divider">chevron_right</v-icon>
-                        <v-breadcrumbs-item
-                                v-for="item in getBreadcrumbs"
-                                :exact="true"
-                                :to="{name:item.name}"
-                                :key="item.label"
-                                :disabled="item.disabled">
-                            @{{ item.label }}
-                        </v-breadcrumbs-item>
-                    </v-breadcrumbs>
-                </div>
-                <v-divider></v-divider>
                 <transition name="fade">
                     <router-view></router-view>
                 </transition>
             </v-content>
-            <v-footer app fixed>
-                <span>&copy; 2017</span>
-            </v-footer>
         </v-app>
 
         <!-- loader -->
-        <div v-if="showLoader" class="wask_loader bg_half_transparent">
+        <!--div v-if="showLoader" class="wask_loader bg_half_transparent">
             <moon-loader color="red"></moon-loader>
-        </div>
+        </div-->
 
         <!-- snackbar -->
         <v-snackbar

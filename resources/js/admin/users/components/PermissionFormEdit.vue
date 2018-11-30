@@ -126,14 +126,7 @@
                     self.description = Permission.description;
                     self.permissionKey = Permission.key;
 
-                    self.$store.commit('setBreadcrumbs',[
-                        {label:'Users',name:'users.list'},
-                        {label:'Permissions',name:'users.permissions.list'},
-                        {label:'Edit',name:''},
-                        {label:Permission.title,name:''},
-                    ]);
-
-                    (cb || Function)();
+                                        (cb || Function)();
                 });
             }
         }

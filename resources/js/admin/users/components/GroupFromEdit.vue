@@ -185,13 +185,6 @@
                     self.name = Group.name;
                     self.permissions = Group.permissions;
 
-                    self.$store.commit('setBreadcrumbs',[
-                        {label:'Users',name:'users.list'},
-                        {label:'Groups',name:'users.groups.list'},
-                        {label:'Edit',name:''},
-                        {label:Group.name,name:''},
-                    ]);
-
                     cb();
                 });
             },

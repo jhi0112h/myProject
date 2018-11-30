@@ -13,9 +13,6 @@
 
             const self = this;
 
-            self.$store.commit('setBreadcrumbs',[
-                {label:'Dashboard',name:''}
-            ]);
         }
     }
 </script>

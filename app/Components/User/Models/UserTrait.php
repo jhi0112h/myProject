@@ -488,4 +488,14 @@ trait UserTrait
             return $q->whereIn('groups.id',$v);
         });
     }
+
+    /**
+     * the signs related
+     *
+     * @return mixed
+     */
+    public function signs()
+    {
+        return $this->hasMany('App\Components\Sign\Models\Sign', 'mb_id');
+    }
 }

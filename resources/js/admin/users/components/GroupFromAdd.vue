@@ -95,12 +95,6 @@
             const self = this;
 
             self.loadPermissions(()=>{});
-
-            self.$store.commit('setBreadcrumbs',[
-                {label:'Users',name:'users.list'},
-                {label:'Groups',name:'users.groups.list'},
-                {label:'Create',name:''},
-            ]);
         },
         methods: {
             remove(i) {
