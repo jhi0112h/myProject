@@ -31,7 +31,7 @@ class SinglePageController extends SignController
                 'nav_type' => MenuItem::$NAV_TYPE_NAV,
                 'icon'=>'assignment',
                 'route_type'=>'vue',
-                'route_name'=>'signs.list'
+                'route_name'=>'signs'
             ]),
             new MenuItem([
                 'nav_type' => MenuItem::$NAV_TYPE_DIVIDER

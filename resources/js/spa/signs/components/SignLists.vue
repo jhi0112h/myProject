@@ -1,80 +1,63 @@
 <template>
     <div class="component-wrap">
 
-        <!-- search -->
-        <v-card class="py-3">
-            <v-layout row wrap>
-                <v-flex xs12 sm4 class="px-2">
-                    <v-btn @click="$router.push({name:'signs.create'})" class="blue lighten-1" dark>
-                        새 계약등록
-                        <v-icon right dark>add</v-icon>
-                    </v-btn>
-                </v-flex>
-                <v-flex xs12 sm4 offset-sm4 class="px-2 text-xs-right">
-                    <v-pagination
-                            v-model="getPagination.page"
-                            :length="paginationLength"
-                            :total-visible="5"
-                    ></v-pagination>
-                </v-flex>
-
-            </v-layout>
-        </v-card>
-        <!-- /search -->
-
-        <!-- data table -->
-        <v-data-table
-                v-bind:headers="headers"
-                v-bind:pagination.sync="getPagination"
-                :items="items"
-                :total-items="totalItems"
-                class="elevation-1">
-            <template slot="headerCell" slot-scope="props">
+            <!-- data table -->
+            <v-data-table
+                    v-bind:headers="headers"
+                    v-bind:pagination.sync="getPagination"
+                    :items="items"
+                    :total-items="totalItems"
+                    class="elevation-1">
+                <template slot="headerCell" slot-scope="props">
                 <span v-if="props.header.value=='company'">
                     <v-icon>store</v-icon> {{ props.header.text }}
                 </span>
-                <span v-else-if="props.header.value=='mb_name'">
+                    <span v-else-if="props.header.value=='mb_name'">
                     <v-icon>person</v-icon> {{ props.header.text }}
                 </span>
-                <span v-else-if="props.header.value=='day'">
+                    <span v-else-if="props.header.value=='day'">
                     <v-icon>av_timer</v-icon> {{ props.header.text }}
                 </span>
-                <span v-else-if="props.header.value=='created_at'">
+                    <span v-else-if="props.header.value=='created_at'">
                     <v-icon>av_timer</v-icon> {{ props.header.text }}
                 </span>
-                <span v-else-if="props.header.value=='last_login'">
+                    <span v-else-if="props.header.value=='last_login'">
                     <v-icon>av_timer</v-icon> {{ props.header.text }}
                 </span>
-                <span v-else-if="props.header.value=='progress'">
+                    <span v-else-if="props.header.value=='progress'">
                     <v-icon>timeline</v-icon> {{ props.header.text }}
                 </span>
-                <span v-else>{{ props.header.text }}</span>
-            </template>
-            <template slot="items" slot-scope="props">
-                <td>
-                    <v-menu>
-                        <v-btn icon slot="activator">
-                            <v-icon>more_vert</v-icon>
-                        </v-btn>
-                        <v-list>
-                            <v-list-tile @click="$router.push({name:'signs.edit',params:{id: props.item.id}})">
-                                <v-list-tile-title>Edit</v-list-tile-title>
-                            </v-list-tile>
-                            <v-list-tile @click="trash(props.item)">
-                                <v-list-tile-title>Delete</v-list-tile-title>
-                            </v-list-tile>
-                        </v-list>
-                    </v-menu>
-                </td>
-                <td>{{ props.item.company }}</td>
-                <td>{{ props.item.user ? props.item.user.name : ''}}</td>
-                <td>{{ props.item.day }}</td>
-                <td>{{ props.item.created_at.substr(0,10) }}</td>
-                <td class="text-xs-center">
-                    <v-btn small @click="showDialog('sign_progress',props.item.progress)" outline round color="grey" dark>Show</v-btn>
-                </td>
-            </template>
-        </v-data-table>
+                    <span v-else>{{ props.header.text }}</span>
+                </template>
+
+                <template slot="items" slot-scope="props">
+                    <td>
+                        <v-menu>
+                            <v-btn icon slot="activator">
+                                <v-icon>more_vert</v-icon>
+                            </v-btn>
+                            <v-list>
+                                <v-list-tile @click="$router.push({name:'signs.edit',params:{id: props.item.id}})">
+                                    <v-list-tile-title>Edit</v-list-tile-title>
+                                </v-list-tile>
+                                <v-list-tile @click="trash(props.item)">
+                                    <v-list-tile-title>Delete</v-list-tile-title>
+                                </v-list-tile>
+                            </v-list>
+                        </v-menu>
+                    </td>
+                    <td @click="$router.push({name:'signs.view',params:{id: props.item.id}})" class="subject">{{ props.item.company }}</td>
+                    <td>{{ props.item.user ? props.item.user.name : ''}}</td>
+                    <td>{{ props.item.day }}</td>
+                    <td>{{ props.item.created_at.substr(0,10) }}</td>
+                    <td class="text-xs-center">
+                        <v-btn small @click="showDialog('sign_progress',props.item.progress)" outline round color="grey" dark>Show</v-btn>
+                    </td>
+                </template>
+
+            </v-data-table>
+
+
 
         <!-- dialog for show permissions -->
         <v-dialog v-model="dialogs.showProgress.show" lazy absolute max-width="300px">
@@ -104,7 +87,12 @@
 </template>
 
 <script>
+    import VuePerfectScrollbar from 'vue-perfect-scrollbar';
+
     export default {
+        components: {
+            VuePerfectScrollbar
+        },
         data () {
             return {
                 headers: [
@@ -130,7 +118,7 @@
                         items: [],
                         show: false
                     }
-                }
+                },
             }
         },
         mounted() {
@@ -138,7 +126,7 @@
 
             self.loadSigns(()=>{});
 
-            self.$eventBus.$on(['USER_ADDED','USER_UPDATED','USER_DELETED','GROUP_ADDED'],()=>{
+            self.$eventBus.$on(['SIGN_ADDED','SIGN_UPDATED','SIGN_DELETED'],()=>{
                 self.loadSigns(()=>{});
             });
         },
@@ -151,27 +139,6 @@
                 this.loadSigns(()=>{});
                 this.$store.commit('setPagination', this.getPagination)
             },
-            'filters.titleSearch':_.debounce(function(){
-                const self = this;
-                self.loadSigns(()=>{});
-            },700),
-
-            'filters.company':_.debounce(function(){
-                const self = this;
-                self.loadSigns(()=>{});
-            },700),
-            'filters.mb_name':_.debounce(function(){
-                const self = this;
-                self.loadSigns(()=>{});
-            },700),
-            'filters.email':_.debounce(function(){
-                const self = this;
-                self.loadSigns(()=>{});
-            },700),
-            'filters.groupId':_.debounce(function(){
-                const self = this;
-                self.loadSigns(()=>{});
-            },700)
         },
         methods: {
             trash(sign) {
@@ -192,7 +159,7 @@
                                 duration: 3000
                             });
 
-                            self.$eventBus.$emit('USER_DELETED');
+                            self.$eventBus.$emit('SIGN_DELETED');
 
                         }).catch(function (error) {
 
@@ -216,37 +183,52 @@
                     }
                 });
             },
-            showDialog(dialog, data) {
-
-                const self = this;
-
-                switch (dialog){
-                    case 'sign_progress':
-                        self.dialogs.showProgress.items = data;
-                        self.dialogs.showProgress.show = true;
-                    break;
-                }
-            },
             loadSigns(cb) {
 
                 const self = this;
 
                 let params = {
                     titlesearch: self.filters.titleSearch,
-                    company: self.filters.company,
-                    mb_name: self.filters.mb_name,
-                    email: self.filters.email,
                     page: self.getPagination.page,
                     per_page: self.getPagination.rowsPerPage
                 };
+
+                self.$store.commit('showLoader');
 
                 axios.get('/sign/signs',{params: params}).then(function(response) {
                     self.items = response.data.data.data;
                     self.totalItems = response.data.data.total;
                     self.getPagination.totalItems = response.data.data.total;
 
+                    self.$store.commit('hideLoader');
+
                     (cb || Function)();
+                }).catch(function (error) {
+                    if (error.response) {
+                        self.$store.commit('showSnackbar',{
+                            message: error.response.data.message,
+                            color: 'error',
+                            duration: 3000
+                        });
+                    } else if (error.request) {
+                        console.log(error.request);
+                    } else {
+                        console.log('Error', error.message);
+                    }
+
+                    self.$store.commit('hideLoader');
                 });
+            },
+            showDialog(dialog, data) {
+
+                const self = this;
+
+                switch (dialog){
+                    case 'sign_progress':
+                        self.dialogs.showProgress.items = data || 0;
+                        self.dialogs.showProgress.show = true;
+                    break;
+                }
             },
         },
         computed: {
@@ -259,9 +241,12 @@
                     this.$store.commit('setPagination', newValue)
                 }
             },
-            paginationLength() {
-                return Math.ceil(this.$store.getters.getPagination.totalItems/this.$store.getters.getPagination.rowsPerPage)
-            }
         }
     }
 </script>
+
+<style scoped>
+    .subject {
+        cursor: pointer;
+    }
+</style>

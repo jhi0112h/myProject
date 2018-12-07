@@ -11,7 +11,15 @@
     import { Input } from 'vue-instantsearch';
     export default {
         extends: Input,
-        name: "VuetifyInput"
+        name: "VuetifyInput",
+        props: {
+            searchText : ''
+        },
+        watch: {
+            'searchText': function () {
+                this.query = this.searchText;
+            }
+        }
     }
 </script>
 

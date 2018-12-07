@@ -21,7 +21,7 @@
     </script>
 </head>
 <body>
-<div id="admin">
+<div id="app-mount">
 
     <template>
         <v-app id="inspire">
@@ -29,6 +29,7 @@
                     mini-variant
                     fixed
                     dark
+                    floating
                     v-model="drawer"
                     app>
 
@@ -61,12 +62,13 @@
                     @endforeach
                 </v-list>
             </v-navigation-drawer>
+
             <v-toolbar app fixed color="#fff">
                 <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
                 <v-toolbar-title>
-                    <a href="/" class="d-flex">
+                    <div @click="$router.push({name:'signs.list'})" class="d-flex">
                         <img height="35" src="{{url('img/logo.png')}}">
-                    </a>
+                    </div>
                 </v-toolbar-title>
                 <v-flex xs12 sm4>
                     <search></search>
@@ -120,9 +122,9 @@
         </v-app>
 
         <!-- loader -->
-        <!--div v-if="showLoader" class="wask_loader bg_half_transparent">
-            <moon-loader color="red"></moon-loader>
-        </div-->
+        <div v-if="showLoader" class="wask_loader bg_half_transparent">
+            <dot-loader color="#faa61a" size="80px"></dot-loader>
+        </div>
 
         <!-- snackbar -->
         <v-snackbar
@@ -156,6 +158,6 @@
 <!-- Scripts -->
 <script src="{{ asset('js/manifest.js') }}"></script>
 <script src="{{ asset('js/vendor.js') }}"></script>
-<script src="{{ asset('js/admin.js') }}"></script>
+<script src="{{ asset('js/main.js') }}"></script>
 </body>
 </html>

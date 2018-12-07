@@ -24,7 +24,7 @@ class CreateSignsTable extends Migration
             $table->string('service');
             $table->string('phone', 14);
             $table->string('email');
-            $table->text('comment');
+            $table->text('comment')->nullable();
             $table->string('file')->nullable();
             $table->string('progress')->nullable();
             $table->string('receipt')->nullable();

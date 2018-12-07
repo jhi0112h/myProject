@@ -8,7 +8,7 @@
                 v-for="result in results"
                 :key="result.objectID"
                 avatar
-                @click=""
+                @click="resultClickEvent(result)"
         >
             <v-list-tile-content>
                 <v-list-tile-title>
@@ -40,6 +40,12 @@
     export default {
         extends: Results,
         name: "VuetifyResults",
+        methods: {
+            resultClickEvent: function (result) {
+                this.$router.push({name:'signs.view',params:{id: result.id}});
+                this.$emit('clearQuery')
+            }
+        }
     }
 </script>
 

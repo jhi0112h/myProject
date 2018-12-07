@@ -5,10 +5,10 @@
                 api-key="8650199c9bcd974cc22fe0077fadcdd7"
                 index-name="signs"
         >
-            <vuetify-input @query="getQuery">
+            <vuetify-input @query="getQuery" :search-text="searchText">
             </vuetify-input>
 
-            <vuetify-results v-if="searchResultShow" :results-per-page="6"></vuetify-results>
+            <vuetify-results v-if="searchResultShow" :results-per-page="6" @clearQuery="clearQuery"></vuetify-results>
         </ais-index>
     </div>
 </template>
@@ -26,17 +26,19 @@
         }),
         watch: {
             'searchText':_.debounce(function () {
-                    if(this.searchText) {
+                    if( this.searchText ) {
                         this.searchResultShow = true
                     } else {
                         this.searchResultShow = false
                     }
-                },100
-            )
+                }, 100)
         },
         methods: {
-            'getQuery': function (value) {
+            getQuery: function (value) {
                 this.searchText = value;
+            },
+            clearQuery: function () {
+                this.searchText = '';
             }
         }
     }
@@ -46,5 +48,4 @@
     .component-wrap {
         position: relative;
     }
-
 </style>

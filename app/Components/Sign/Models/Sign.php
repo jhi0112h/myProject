@@ -84,7 +84,8 @@ class Sign extends Model
      * @var array
      */
     public static $rules = [
-        'company' => 'required'
+        'company' => 'required',
+        'email' => 'required',
     ];
 
     public function user()

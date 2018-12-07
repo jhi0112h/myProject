@@ -1,26 +1,27 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import store from '../common/Store';
+import store from '../vuex/Store';
 
 // route vue file list
-import Home from './dashboard/Home';
-import Users from './users/Users';
-import UsersLists from './users/components/UserLists';
-import UsersFormAdd from './users/components/UserFormAdd';
-import UserFormEdit from './users/components/UserFormEdit';
-import GroupLists from './users/components/GroupLists';
-import GroupFromAdd from './users/components/GroupFromAdd';
-import GroupFromEdit from './users/components/GroupFromEdit';
-import PermissionLists from './users/components/PermissionLists';
-import PermissionFormAdd from './users/components/PermissionFormAdd';
-import PermissionFormEdit from './users/components/PermissionFormEdit';
-import Signs from './signs/Signs';
-import SignLists from './signs/components/SignLists';
-import SignFormAdd from './signs/components/SignFormAdd';
-import SignFormEdit from './signs/components/SignFormEdit';
+import Home from '../admin/dashboard/Home';
+import Users from '../admin/users/Users';
+import UsersLists from '../admin/users/components/UserLists';
+import UsersFormAdd from '../admin/users/components/UserFormAdd';
+import UserFormEdit from '../admin/users/components/UserFormEdit';
+import GroupLists from '../admin/users/components/GroupLists';
+import GroupFromAdd from '../admin/users/components/GroupFromAdd';
+import GroupFromEdit from '../admin/users/components/GroupFromEdit';
+import PermissionLists from '../admin/users/components/PermissionLists';
+import PermissionFormAdd from '../admin/users/components/PermissionFormAdd';
+import PermissionFormEdit from '../admin/users/components/PermissionFormEdit';
+import Signs from '../spa/signs/Signs';
+import SignLists from '../spa/signs/components/SignLists';
+import SignView from '../spa/signs/components/SignView';
+import SignFormAdd from '../spa/signs/components/SignFormAdd';
+import SignFormEdit from '../spa/signs/components/SignFormEdit';
 
-import Files from './files/Files';
-import Settings from './settings/Settings';
+import Files from '../admin/files/Files';
+import Settings from '../admin/settings/Settings';
 
 Vue.use(Router);
 
@@ -101,18 +102,31 @@ const router = new Router({
         },
         {
             path: '/signs',
+            name: 'signs',
             component: Signs,
+            redirect: 'signs/all',
             children: [
                 {
-                    path:'/',
+                    path:'all',
                     name:'signs.list',
                     component: SignLists
                 },
                 {
-                    path:':page',
-                    name:'signs.page',
-                    component: SignLists,
-
+                    path:'all/:id',
+                    name:'signs.view',
+                    component: SignView,
+                    props: (route) => ({propSignId: route.params.id}),
+                },
+                {
+                    path:'not',
+                    name:'signs.list2',
+                    component: SignLists
+                },
+                {
+                    path:'not/:id',
+                    name:'signs.view',
+                    component: SignView,
+                    props: (route) => ({propSignId: route.params.id}),
                 },
                 {
                     path:'create',
@@ -136,9 +150,7 @@ router.beforeEach((to, from, next) => {
 });
 
 router.afterEach((to, from) => {
-    setTimeout(()=>{
-        store.commit('hideLoader');
-    },1000);
+    store.commit('hideLoader');
 });
 
 export default router;

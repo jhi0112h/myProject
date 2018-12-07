@@ -6,39 +6,48 @@
  */
 
 // vendor
-require('../bootstrap');
+require('./bootstrap');
 window.Vue = require('vue');
 
 // 3rd party
 import Vuetify from 'vuetify';
 import 'vuetify/dist/vuetify.min.css';
 
-Vue.use(Vuetify);
+Vue.use(Vuetify, {
+    theme: {}
+});
+
+// javascript plugin
+import anime from 'animejs';
 
 // loader
-import MoonLoader from 'vue-spinner/src/MoonLoader.vue';
+import DotLoader from 'vue-spinner/src/DotLoader.vue';
 
-// search
-import Search from './search/Search.vue';
+// config
+import router from './config/router';
 
-// app
-import router from './router';
-import store from '../common/Store';
-import eventBus from '../common/Event';
-import formatters from '../common/Formatters';
+// vuex
+import store from './vuex/Store';
+
+// common
+import eventBus from './common/Event';
+import formatters from './common/functions/Formatters';
+
+// shared components
+import Search from './shared-components/search/Search.vue';
 import InstantSearch from 'vue-instantsearch';
-import anime from 'animejs';
 
 Vue.use(formatters);
 Vue.use(eventBus);
 Vue.use(InstantSearch);
 
-const admin = new Vue({
-    el: '#admin',
+
+const app = new Vue({
+    el: '#app-mount',
     eventBus,
     store,
     router,
-    components: { MoonLoader: MoonLoader, Search: Search },
+    components: { DotLoader: DotLoader, Search: Search },
     data: () => ({
         drawer: true,
         navigatorAnimation: {},

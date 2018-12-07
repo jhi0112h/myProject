@@ -66,4 +66,32 @@ class SignsRepository extends BaseRepository
     {
         return Sign::class;
     }
+
+    /**
+     * delete a user by id
+     *
+     * @param int $id
+     * @return bool
+     * @throws \Exception
+     */
+    public function delete(int $id)
+    {
+        $ids = explode(',',$id);
+
+        foreach ($ids as $id)
+        {
+            /** @var Sign $User */
+            $Sign = $this->model->find($id);
+
+            if(!$Sign)
+            {
+                return false;
+            };
+
+            //$Sign->groups()->detach();
+            $Sign->delete();
+        }
+
+        return true;
+    }
 }

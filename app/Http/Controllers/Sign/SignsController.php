@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Sign;
 use App\Components\Sign\Models\Sign;
 use App\Components\Sign\Repositories\SignsRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SignsController extends SignController
 {
@@ -44,25 +45,33 @@ class SignsController extends SignController
     /**
      * Store a newly created signs in storage.
      *
+     * @param int $id
      * @param Request $request
      *
      * @return \Illuminate\Http\Response
      */
+
     public function store(Request $request)
     {
         $validate = validator($request->all(),[
             'company' => 'required',
-            'email' => 'required|email|unique:users,email',
+            'day' => 'required',
+            'phone' => 'required',
+            'email' => 'required',
         ]);
+
+        $userId = Auth::id();
+
+        $request->request->add([ 'mb_id' => $userId ]);
 
         if($validate->fails()) return $this->sendResponseBadRequest($validate->errors()->first());
 
-        /** @var User $user */
+        /** @var Sign $sign */
         $sign = $this->signsRepository->create($request->all());
 
         if(!$sign) return $this->sendResponseBadRequest("Failed create.");
 
-        return $this->sendResponseCreated($user);
+        return $this->sendResponseCreated($sign);
     }
 
     /**
@@ -110,17 +119,20 @@ class SignsController extends SignController
      */
     public function update($id, Request $request)
     {
-        $signs = $this->signsRepository->findWithoutFail($id);
+        $validate = validator($request->all(),[
+            'company' => 'required',
+            'day' => 'required',
+            'phone' => 'required',
+            'email' => 'required',
+        ]);
 
-        if (empty($signs)) {
+        if($validate->fails()) return $this->sendResponseBadRequest($validate->errors()->first());
 
-            return redirect(route('signs.index'));
-        }
+        $updated = $this->signsRepository->update($id,$request->all());
 
-        $signs = $this->signsRepository->update($request->all(), $id);
+        if(!$updated) return $this->sendResponseBadRequest("Failed update.");
 
-
-        return redirect(route('signs.index'));
+        return $this->sendResponseUpdated();
     }
 
     /**
@@ -132,16 +144,19 @@ class SignsController extends SignController
      */
     public function destroy($id)
     {
-        $signs = $this->signsRepository->findWithoutFail($id);
+        // do not delete self
 
-        if (empty($signs)) {
+        $User = \Auth::user();
 
-            return redirect(route('signs.index'));
+        If(!$User->isSuperUser()) return $this->sendResponseForbidden();
+
+        try {
+            $this->signsRepository->delete($id);
+        } catch (\Exception $e) {
+            return $this->sendResponseBadRequest("Failed to delete");
         }
 
-        $this->signsRepository->delete($id);
-
-
-        return redirect(route('signs.index'));
+        return $this->sendResponseDeleted();
     }
+
 }

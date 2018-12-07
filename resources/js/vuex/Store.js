@@ -27,7 +27,7 @@ export default new Vuex.Store({
         //pagination
         pagination: {
             page:1,
-            rowsPerPage: 20,
+            rowsPerPage: 25,
             totalItems: ''
         }
     },
