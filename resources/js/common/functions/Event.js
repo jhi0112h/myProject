@@ -4,7 +4,7 @@ const EventBus = new Vue();
 
 export default {
 
-    install(Vue, options) {
+        install(Vue, options) {
 
         Vue.prototype.$eventBus = EventBus;
     }

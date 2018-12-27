@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model as Model;
 
 /**
  * Class signs
- * @package App\Models
+ * @package App\Components\Sign\Models
  * @version September 21, 2018, 8:58 am UTC
  *
  * @property integer mb_id
@@ -94,6 +94,16 @@ class Sign extends Model
     }
 
     /**
+     * the productProcess related
+     *
+     * @return mixed
+     */
+    public function productProcess()
+    {
+        return $this->hasMany('App\Components\Sign\Models\ProductProcess', 'sign_id');
+    }
+
+    /**
      * Get the indexable data array for the model.
      *
      * @return array
@@ -104,6 +114,10 @@ class Sign extends Model
 
         // user infomation
         $signs['mb_name'] = $this->user->name;
+
+        if(count($this->productProcess) > 0) {
+            $signs['progress'] = $this->productProcess[0]['state'];
+        }
 
         return $signs;
     }

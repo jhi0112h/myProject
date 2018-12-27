@@ -27,7 +27,7 @@ class SignsController extends SignController
     {
         $signs = Sign::search($request->keword ?? '')
             ->paginate($request->per_page ?? 10);
-        $signs->load('user');
+        $signs->load(['user','productProcess']);
 
         return $this->sendResponseOk($signs,"list signs ok.");
     }

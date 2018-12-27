@@ -9,6 +9,7 @@
 namespace App\Components\Core\Utilities;
 
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class Helpers
@@ -265,5 +266,13 @@ class Helpers
         fwrite($fp, $str);
         fclose($fp);
         return true;
+    }
+
+    /**
+     * @return bool
+     */
+    public static function is_api_request(Request $request)
+    {
+        return starts_with($request->getHttpHost(), env('API_DOMAIN'));
     }
 }

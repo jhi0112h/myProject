@@ -2,31 +2,15 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Components\User\Models\User;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Lang;
 
 class LoginController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
-
     use AuthenticatesUsers;
-
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/admin';
 
     /**
      * Create a new controller instance.
@@ -39,37 +23,75 @@ class LoginController extends Controller
     }
 
     /**
-     * Handle a login request to the application.
+     * Attempt to log the user into the application.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Http\JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
+     * @param  \Illuminate\Http\Request  $request
+     * @return bool
      */
-    public function login(Request $request)
+    protected function attemptLogin(Request $request)
     {
-        $this->validateLogin($request);
+        $token = $this->guard()->attempt($this->credentials($request));
 
-        // If the class is using the ThrottlesLogins trait, we can automatically throttle
-        // the login attempts for this application. We'll key this by the username and
-        // the IP address of the client making these requests into this application.
-        if ($this->hasTooManyLoginAttempts($request)) {
-            $this->fireLockoutEvent($request);
+        if ($token) {
+            $this->guard()->setToken($token);
 
-            return $this->sendLockoutResponse($request);
+            return true;
         }
 
-        if ($this->attemptLogin($request)) {
+        return false;
+    }
 
-            $this->guard()->user()->logLastLogin();
+    /**
+     * Send the response after the user was authenticated.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    protected function sendLoginResponse(Request $request)
+    {
+        $this->clearLoginAttempts($request);
 
-            return $this->sendLoginResponse($request);
+        $token = (string) $this->guard()->getToken();
+        $expiration = $this->guard()->getPayload()->get('exp');
+
+        return [
+            'token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => $expiration - time(),
+        ];
+    }
+
+    /**
+     * Get the failed login response instance.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     *
+     * @return
+     */
+    protected function sendFailedLoginResponse(Request $request)
+    {
+        $error = array();
+        if ( ! User::where('email', $request->email)->first() ) {
+            $error += ['email' => Lang::get('auth.email')];
+            return $error;
         }
 
-        // If the login attempt was unsuccessful we will increment the number of attempts
-        // to login and redirect the user back to the login form. Of course, when this
-        // user surpasses their maximum number of attempts they will get locked out.
-        $this->incrementLoginAttempts($request);
+        if ( ! User::where('email', $request->email)->where('password', bcrypt($request->password))->first() ) {
+            $error += ['password' => Lang::get('auth.password')];
+        }
 
-        return $this->sendFailedLoginResponse($request);
+        return response()->json($error);
+    }
+
+    /**
+     * Log the user out of the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function logout(Request $request)
+    {
+        $this->guard()->logout();
     }
 }

@@ -47,4 +47,8 @@ trait SignTrait
         return $query->where('email','=',$email);
     }
 
+    public  function setProgress($query)
+    {
+
+    }
 }
