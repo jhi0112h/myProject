@@ -29,6 +29,12 @@ class SignsController extends SignController
             ->paginate($request->per_page ?? 10);
         $signs->load(['user','productProcess']);
 
+        foreach($signs->items() as $key => $item) {
+            if($item->productProcess()->first()) {
+                $item->progress = $item->productProcess()->first()->state;
+            }
+        }
+
         return $this->sendResponseOk($signs,"list signs ok.");
     }
 

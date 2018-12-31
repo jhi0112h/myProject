@@ -62,7 +62,7 @@
                 <td>{{ props.item.day }}</td>
                 <td>{{ props.item.created_at.substr(0,10) }}</td>
                 <td class="text-xs-center">
-                    <v-btn small @click="showDialog('sign_progress',props.item.product_process)" round color="grey"
+                    <v-btn small @click="showDialog('sign_progress',props.item.product_process)" round color="props.item.button_color"
                            dark>
                         <span v-if="props.item.product_process.length > 0">
                             {{props.item.product_process[0].state}}
@@ -245,7 +245,7 @@
             toggleAll() {
                 if (this.selected.length) this.selected = []
                 else this.selected = this.desserts.slice()
-            },
+            }
         },
         computed: {
             // pagination
